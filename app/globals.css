@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --parchment: #f2ece0;
+  --dark: #131110;
+  --cream: #f8f4ea;
+  --ink: #131110;
+  --paper: #f2ece0;
+  --red: #c9381c;
+  --muted: #9a9080;
+}
+
+@theme inline {
+  --color-parchment: var(--parchment);
+  --color-dark: var(--dark);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-red: var(--red);
+  --color-muted: var(--muted);
+  --font-vn: var(--font-be-vietnam-pro);
+  --font-mono-label: var(--font-ibm-plex-mono);
+}
+
+body {
+  background: var(--parchment);
+  color: var(--dark);
+  font-family: var(--font-vn);
+}
+
+.font-mono-label {
+  font-family: var(--font-mono-label);
+}
