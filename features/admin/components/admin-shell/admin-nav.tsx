@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/admin/vocabulary", label: "Từ vựng", icon: "字" },
   { href: "/admin/users", label: "Người dùng", icon: "◎" },
   { href: "/admin/waitlist", label: "Waitlist", icon: "✉" },
+  { href: "/admin/feedback", label: "Góp ý", icon: "💬" },
 ];
 
 export function AdminNav() {
