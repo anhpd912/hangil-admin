@@ -1,32 +1,25 @@
-"use client";
+import type { LessonContent } from "@/shared/api/types/admin-lesson";
+import { TheoryEditor } from "./theory-editor";
+import { ExamplesEditor } from "./examples-editor";
+import { ExercisesEditor } from "./exercises-editor";
+
+export const EMPTY_CONTENT: LessonContent = {
+  theory: { title: "", explanation: "", notes: "" },
+  examples: [],
+  exercises: [],
+};
 
 type LessonContentEditorProps = {
-  value: string;
-  onChange: (value: string) => void;
+  value: LessonContent;
+  onChange: (value: LessonContent) => void;
 };
 
 export function LessonContentEditor({ value, onChange }: LessonContentEditorProps) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="font-mono-label text-xs text-muted">Nội dung bài học (markdown)</label>
-      <textarea
-        rows={14}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="rounded-2xl border border-dark/20 bg-cream px-4 py-3 font-mono text-sm text-dark"
-      />
+    <div className="flex flex-col gap-6 rounded-2xl border border-dark/10 p-4">
+      <TheoryEditor value={value.theory} onChange={(theory) => onChange({ ...value, theory })} />
+      <ExamplesEditor value={value.examples} onChange={(examples) => onChange({ ...value, examples })} />
+      <ExercisesEditor value={value.exercises} onChange={(exercises) => onChange({ ...value, exercises })} />
     </div>
   );
-}
-
-/** content jsonb lưu {markdown: string} — round-trip an toàn dù schema chưa cố định ở BE. */
-export function contentToMarkdown(content: unknown): string {
-  if (content && typeof content === "object" && "markdown" in content) {
-    return String((content as { markdown: unknown }).markdown ?? "");
-  }
-  return "";
-}
-
-export function markdownToContent(markdown: string): unknown {
-  return markdown.trim() ? { markdown } : undefined;
 }
