@@ -4,7 +4,7 @@ type BadgeProps = {
 };
 
 export function Badge({ children, active = false }: BadgeProps) {
-  const style = active ? "bg-red text-parchment border-red" : "border-dark/20 text-muted";
+  const style = active ? "bg-red text-parchment border-red" : "border-line-strong text-muted-ink";
   return (
     <span
       className={`font-mono-label rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-wide ${style}`}

@@ -8,6 +8,12 @@
   --paper: #f2ece0;
   --red: #c9381c;
   --muted: #9a9080;
+  /* #9a9080 trên nền parchment chỉ đạt ~2.4:1 — đủ cho viền/trang trí nhưng
+     không đọc được ở cỡ chữ nhỏ. Chữ phụ dùng tone đậm hơn (~5.2:1). */
+  --muted-ink: #6b6255;
+  --line: rgba(19, 17, 16, 0.12);
+  --line-strong: rgba(19, 17, 16, 0.24);
+  --ok: #2f6f4f;
 }
 
 @theme inline {
@@ -18,6 +24,10 @@
   --color-paper: var(--paper);
   --color-red: var(--red);
   --color-muted: var(--muted);
+  --color-muted-ink: var(--muted-ink);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ok: var(--ok);
   --font-vn: var(--font-be-vietnam-pro);
   --font-mono-label: var(--font-ibm-plex-mono);
 }
@@ -26,8 +36,25 @@ body {
   background: var(--parchment);
   color: var(--dark);
   font-family: var(--font-vn);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .font-mono-label {
   font-family: var(--font-mono-label);
+  font-feature-settings: "tnum" 1;
+}
+
+/* Số liệu xếp cột phải thẳng hàng — bật tabular figures cho mọi con số dashboard. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--dark);
+  outline-offset: 2px;
 }
