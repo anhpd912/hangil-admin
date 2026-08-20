@@ -18,14 +18,16 @@ export function AdminHeader() {
   return (
     <button
       onClick={handleSignOut}
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-parchment/70 transition-colors hover:bg-parchment/10 hover:text-parchment"
+      title={user?.email ?? undefined}
+      className="flex w-full items-center gap-3 rounded-full px-3 py-2.5 text-left text-parchment/70 transition-colors hover:bg-parchment/10 hover:text-parchment"
     >
-      <span className="font-mono-label flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red text-xs text-parchment">
+      <span className="font-mono-label flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red text-[11px] text-parchment">
         {initial}
       </span>
-      <span className="flex flex-col overflow-hidden">
-        <span className="truncate text-sm">{user?.email ?? "—"}</span>
-        <span className="font-mono-label text-[10px] uppercase text-parchment/40">Đăng xuất</span>
+      {/* min-w-0 bắt buộc: thiếu nó thì truncate vô hiệu và email dài tràn khỏi sidebar. */}
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-[13px] leading-5">{user?.email ?? "—"}</span>
+        <span className="font-mono-label text-[10px] uppercase tracking-[0.1em] text-parchment/45">Đăng xuất</span>
       </span>
     </button>
   );

@@ -1,37 +1,78 @@
-import { DataTable, type Column } from "@/features/admin/components/ui/data-table";
-import { Badge } from "@/features/admin/components/ui/badge";
+"use client";
 
-type ActivityRow = {
-  id: string;
-  time: string;
-  action: string;
-  user: string;
-  status: string;
+import Link from "next/link";
+import type { ActivityItem, ActivityKind } from "@/shared/api/types/admin-stats";
+import { formatClock, formatRelative } from "../lib/format";
+
+const KIND_VIEW: Record<ActivityKind, { label: string; href?: string; accent: boolean }> = {
+  signup: { label: "Đăng ký", href: "/admin/users", accent: false },
+  lesson_completed: { label: "Bài học", href: "/admin/lessons", accent: false },
+  journal: { label: "AI chấm", accent: false },
+  feedback: { label: "Góp ý", href: "/admin/feedback", accent: true },
+  waitlist: { label: "Waitlist", href: "/admin/waitlist", accent: false },
 };
 
-/** Dữ liệu mẫu — BE chưa có endpoint activity log, wire sau khi có. */
-const SAMPLE_ROWS: ActivityRow[] = [
-  { id: "1", time: "14:22:01", action: "Đăng ký mới", user: "minh.tran@gmail.com", status: "success" },
-  { id: "2", time: "13:45:12", action: "Nâng cấp Pro", user: "hoang.kim@naver.com", status: "pro" },
-  { id: "3", time: "13:10:05", action: "API Log: GPT-4 Prompt", user: "system_internal", status: "cached" },
-  { id: "4", time: "12:58:30", action: "Đăng ký mới", user: "phuonglee99@outlook.com", status: "success" },
-  { id: "5", time: "12:30:11", action: "API Error: Timeout", user: "user_id_982", status: "failed" },
-];
-
-const COLUMNS: Column<ActivityRow>[] = [
-  { key: "time", header: "Thời gian" },
-  { key: "action", header: "Hoạt động" },
-  { key: "user", header: "Người dùng" },
-  { key: "status", header: "Trạng thái", render: (row) => <Badge active={row.status === "failed"}>{row.status}</Badge> },
-];
-
-export function ActivityFeed() {
+function KindChip({ kind }: { kind: ActivityKind }) {
+  const view = KIND_VIEW[kind];
+  const style = view.accent ? "border-red/40 text-red" : "border-line-strong text-muted-ink";
   return (
-    <div>
-      <p className="font-mono-label mb-3 text-[11px] uppercase tracking-wide text-muted">
-        Hoạt động gần đây — dữ liệu mẫu
-      </p>
-      <DataTable columns={COLUMNS} rows={SAMPLE_ROWS} rowKey={(row) => row.id} />
+    <span
+      className={`font-mono-label inline-block shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] ${style}`}
+    >
+      {view.label}
+    </span>
+  );
+}
+
+function ActivityRow({ item }: { item: ActivityItem }) {
+  const view = KIND_VIEW[item.kind];
+
+  const row = (
+    <div className="grid grid-cols-[128px_minmax(0,1fr)] items-baseline gap-x-6 gap-y-1 py-3.5 md:grid-cols-[168px_minmax(0,1fr)_auto]">
+      <div className="font-mono-label text-[11px] leading-5 text-muted-ink">
+        <span className="tnum">{formatClock(item.at)}</span>
+        <span className="tnum ml-2 text-muted">{formatRelative(item.at)}</span>
+      </div>
+
+      <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
+        <KindChip kind={item.kind} />
+        <span className="text-[14px] leading-6 text-dark">{item.detail}</span>
+      </div>
+
+      <div className="col-start-2 truncate font-mono-label text-[11px] text-muted-ink md:col-start-3 md:text-right">
+        {item.actor}
+      </div>
     </div>
+  );
+
+  return (
+    <li className="border-b border-line last:border-b-0">
+      {view.href ? (
+        <Link href={view.href} className="block transition-colors hover:bg-dark/[0.03]">
+          {row}
+        </Link>
+      ) : (
+        row
+      )}
+    </li>
+  );
+}
+
+export function ActivityFeed({ items }: { items: ActivityItem[] }) {
+  if (items.length === 0) {
+    return (
+      <p className="rounded-[1.75rem] border border-dashed border-line-strong px-6 py-10 text-[14px] text-muted-ink">
+        Chưa có hoạt động nào được ghi nhận. Dòng thời gian này tổng hợp đăng ký mới, bài học hoàn thành, lượt AI chấm
+        nhật ký, góp ý và waitlist.
+      </p>
+    );
+  }
+
+  return (
+    <ul className="border-t border-line">
+      {items.map((item) => (
+        <ActivityRow key={item.id} item={item} />
+      ))}
+    </ul>
   );
 }
