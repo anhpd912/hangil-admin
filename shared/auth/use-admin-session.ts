@@ -11,9 +11,9 @@ type SessionUser = {
 };
 
 export function useAdminSession() {
-  const { data, isPending } = useSession();
+  const { data, isPending, isRefetching, refetch } = useSession();
   const user = (data?.user ?? null) as SessionUser | null;
   const isAdmin = user?.role === "admin";
 
-  return { user, isAdmin, isPending };
+  return { user, isAdmin, isPending, isRefetching, refetch };
 }
